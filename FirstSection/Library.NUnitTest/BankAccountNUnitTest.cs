@@ -68,5 +68,63 @@ namespace LibraryDpm
         }
 
 
+
+        [Test]
+        public void BankAccountLoggerGen_LogMockingObjReferenceReturnBoolean()
+        {
+            var vMocking = new Mock<ILoggerGen>();
+            Cliente vClient = new();    
+            Cliente vClientNotUsed = new();
+
+            vMocking.Setup(x => x.MessageWithObjReferenceReturnBool(ref vClient)).Returns(true);
+            Assert.IsTrue(vMocking.Object.MessageWithObjReferenceReturnBool(ref vClient));
+            Assert.IsFalse(vMocking.Object.MessageWithObjReferenceReturnBool(ref vClientNotUsed));
+        }
+
+
+        [Test]
+        public void BankAccountLoggerGen_LogMockingProperties_ReturnTrue()
+        {
+            var vMocking = new Mock<ILoggerGen>();
+            vMocking.Setup(x => x.TypeLogger).Returns("warning");
+            vMocking.Setup(x => x.PriorityLogger).Returns(10);
+
+            ////allows to reset variables  before initioalize in setup
+            vMocking.SetupAllProperties();
+            vMocking.Object.PriorityLogger = 100; //Generate error if the value is different from 100
+            vMocking.Object.TypeLogger = "warning";
+
+            Assert.That(vMocking.Object.TypeLogger, Is.EqualTo("warning"));
+            Assert.That(vMocking.Object.PriorityLogger, Is.EqualTo(100));
+
+
+            //Callbacks
+            string vTempName = "Deymer";
+            vMocking.Setup(x => x.LogDatabase(It.IsAny<string>()))
+                .Returns(true)
+                .Callback((string vAddvalueName) => vTempName += vAddvalueName);
+
+            vMocking.Object.LogDatabase(" Perea");
+
+            Assert.That(vTempName, Is.EqualTo("Deymer Perea"));
+        }
+
+
+        [Test]
+        public void BankAccountLoggerGen_Verify()
+        {
+            var vMocking = new Mock<ILoggerGen>();
+            BankAccount bankAccount = new(vMocking.Object);
+            bankAccount.Deposit(100);
+            
+            Assert.That(bankAccount.GetBalance(), Is.EqualTo(100));
+
+            //check counts times the mock calls the method
+            vMocking.Verify(x => x.Message(It.IsAny<string>()), Times.Exactly(4));
+            vMocking.Verify(x => x.Message("Is another text"), Times.AtLeastOnce);
+            vMocking.VerifySet(x => x.PriorityLogger=100, Times.Once);
+            vMocking.VerifyGet(x => x.PriorityLogger, Times.Once);
+        }
+
     }
 }

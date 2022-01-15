@@ -8,14 +8,20 @@ namespace LibraryDpm
 {
     public interface ILoggerGen
     {
+        public int PriorityLogger { get; set; } 
+        public string TypeLogger { get; set; }
         void Message(string message);
         bool LogDatabase(string message);
         bool BalanceBeforeWithdrawal(int bBeforeWithdrawal);
+
+        bool MessageWithObjReferenceReturnBool(ref Cliente cliente);
     }
 
 
     public class LoggerGen : ILoggerGen
     {
+        public int PriorityLogger { get; set; }
+        public string TypeLogger { get; set; }
         public bool BalanceBeforeWithdrawal(int bBeforeWithdrawal)
         {
             if(bBeforeWithdrawal >= 0)
@@ -37,10 +43,19 @@ namespace LibraryDpm
         {
             Console.WriteLine(message);
         }
+
+        public bool MessageWithObjReferenceReturnBool(ref Cliente cliente)
+        {
+            return true;
+        }
     }
+
+
 
     public class LoggerGenFake : ILoggerGen
     {
+        public int PriorityLogger { get; set; }
+        public string TypeLogger { get; set; }
         public bool BalanceBeforeWithdrawal(int bBeforeWithdrawal)
         {
             return false;
@@ -54,6 +69,11 @@ namespace LibraryDpm
         public void Message(string message)
         {
             
+        }
+
+        public bool MessageWithObjReferenceReturnBool(ref Cliente cliente)
+        {
+            return false;
         }
     }
 }

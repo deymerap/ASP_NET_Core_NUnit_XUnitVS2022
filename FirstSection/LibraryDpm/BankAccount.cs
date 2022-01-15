@@ -19,6 +19,12 @@ namespace LibraryDpm
         public bool Deposit(int amount)
         {
             _loggerGen.Message($"Adding money to the account. New amount:{amount}");
+            _loggerGen.Message($"Is another text");
+            _loggerGen.Message($"Is another text more");
+            _loggerGen.PriorityLogger = 100;
+
+            var vPriority = _loggerGen.PriorityLogger;
+
             Balance += amount;
             return true;
         }

@@ -27,11 +27,11 @@ namespace LibraryDpm
         {
             if (amount <= Balance)
             {
-                _loggerGen.Message($"Withdrawing money to the account. New amount:{amount}");
+                _loggerGen.LogDatabase($"Withdrawing money to the account. New amount:{amount}");
                 Balance -= amount;
-                return true;
+                return _loggerGen.BalanceBeforeWithdrawal(Balance);
             }
-            return false;
+            return _loggerGen.BalanceBeforeWithdrawal(Balance - amount); 
 
         }
 

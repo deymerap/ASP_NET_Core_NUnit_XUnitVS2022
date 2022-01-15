@@ -38,5 +38,35 @@ namespace LibraryDpm
             Assert.That(bankAccount.GetBalance, Is.EqualTo(100));
         }
 
+        [Test]
+        public void Deposit_input100ForWithdrawalMocking_ReturnTrue()
+        {
+            var vMocking = new Mock<ILoggerGen>();
+            vMocking.Setup(x => x.LogDatabase("you can this way")).Returns(true);
+            vMocking.Setup(x => x.BalanceBeforeWithdrawal(It.IsAny<int>())).Returns(true);
+
+
+            BankAccount bankAccount = new BankAccount(vMocking.Object);
+            bankAccount.Deposit(200);
+            bool vResponseWithdrawal = bankAccount.Withdrawal(100);
+
+            Assert.IsTrue(vResponseWithdrawal);
+        }
+
+        [Test]
+        public void Deposit_input300ForWithdrawalMocking_ReturnFalse()
+        {
+            var vMocking = new Mock<ILoggerGen>();
+            vMocking.Setup(x => x.BalanceBeforeWithdrawal(It.Is<int>(x => x > 0))).Returns(false);
+
+
+            BankAccount bankAccount = new BankAccount(vMocking.Object);
+            bankAccount.Deposit(200);
+            bool vResponseWithdrawal = bankAccount.Withdrawal(300);
+
+            Assert.IsFalse(vResponseWithdrawal);
+        }
+
+
     }
 }

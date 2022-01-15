@@ -94,6 +94,21 @@ namespace LibraryDpm
             Assert.That(() => vCli.CreateFullName(vName, vLastName), Throws.ArgumentException);
         }
 
+        [Test]
+        public void GetDeltailClient_CreateClientWithLessThan500TotalOrder_ReturBasicClient()
+        {
+            vCli.OrderTotal = 150;
+            var vResponse = vCli.GetDeltailClient();
+            Assert.That(vResponse, Is.TypeOf<ClientBasic>());
+        }
+
+        [Test]
+        public void GetDeltailClient_CreateClientWithMoreThan500TotalOrder_ReturBasicClient()
+        {
+            vCli.OrderTotal = 550;
+            var vResponse = vCli.GetDeltailClient();
+            Assert.That(vResponse, Is.TypeOf<ClientPremiun>());
+        }
 
 
     }

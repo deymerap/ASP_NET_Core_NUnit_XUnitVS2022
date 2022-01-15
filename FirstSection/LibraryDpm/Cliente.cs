@@ -6,10 +6,28 @@ using System.Threading.Tasks;
 
 namespace LibraryDpm
 {
+    public interface ICliente
+    {
+        string NameClient { get; set; }
+        int Discount { get; set; } 
+        int OrderTotal { get; set; }
+        bool IsPremium { get; set; }
+
+
+    }
+
     public class Cliente
     {
         public string NameClient { get; set; }
-        public int Discount { get; set; } = 10;
+        public int Discount { get; set; }
+        public int OrderTotal { get; set; }
+        public bool IsPremium { get; set; }
+
+        public Cliente()
+        {
+            Discount = 10;
+            IsPremium = false;
+        }
         public string CreateFullName(string Name, string LastName)
         {
 
@@ -21,7 +39,20 @@ namespace LibraryDpm
             return NameClient;
         } 
             
+        public ClientType GetDeltailClient()
+        {
+            if (OrderTotal < 500)
+                return new ClientBasic();
+  
+            return new ClientPremiun();
 
+        }
 
     }
+
+
+    public class ClientType { }
+    public class ClientBasic : ClientType { }
+    public class ClientPremiun : ClientType { }
+
 }

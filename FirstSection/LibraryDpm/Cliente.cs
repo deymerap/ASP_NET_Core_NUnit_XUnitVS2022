@@ -12,7 +12,6 @@ namespace LibraryDpm
         int Discount { get; set; } 
         int OrderTotal { get; set; }
         bool IsPremium { get; set; }
-        string LastName { get; set; }
 
     }
 
